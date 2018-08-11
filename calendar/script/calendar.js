@@ -7,7 +7,7 @@ class Calendar {
         this.lowerLimit = lowerLimit; // 允许输入的最小日期
         this.upperLimit = upperLimit; // 允许输入的最大日期
         this.show = false; // 日期框的显示与隐藏
-        this.multiDate = multiDate; // 选择一个日期或者一个时间段
+        this.multiDate = multiDate; // 选择一个日期或者一个时间段,true为时间段
         this.dateRange = []; // 用于存放两次连续点击的date
         this.minRange = minRange; // 选择时间段时的最少天数
         this.maxRange = maxRange; // 选择时间段时的最多天数
@@ -84,10 +84,11 @@ class Calendar {
         document.getElementById('date-input').value = `
         ${dateCopy.getFullYear()}-${dateCopy.getMonth() + 1}-${dateCopy.getDate()}`.trim();
 
-        // 箭头中间显示的年月
+        // 上个月和下个月按钮中间显示的年月
         let title = document.getElementById('title');
         title.innerHTML = `${dateCopy.getFullYear()}年${dateCopy.getMonth() + 1}月`;
 
+        // 找到要渲染的第一天的日期：有可能是上个月
         let firstDay = this.getFirstDay(dateCopy);
         dateCopy.setDate(1 - firstDay); // 当setData传入的参数为0时，读取的是上个月的最后一天，以此类推
         
@@ -103,7 +104,8 @@ class Calendar {
                 
                 if (dateCopy.getMonth() !== initialDate.getMonth()) {
                     td.className = "illegalDay";
-                } else if (dateCopy.getDay() === 0 || dateCopy.getDay() === 6) {
+                } 
+                else if (dateCopy.getDay() === 0 || dateCopy.getDay() === 6) {
                     td.className = "weekend";
                 }
                 if (dateCopy.getDate() === initialDate.getDate() && dateCopy.getMonth() === initialDate.getMonth()) {
@@ -122,14 +124,15 @@ class Calendar {
                 let allTd = document.querySelectorAll('td');
                 let firstIndex, secondIndex;
                 for (let i = 0;i < allTd.length;i++) {
-                    if (allTd[i].innerText === this.dateRange[0].getDate().toString()) {
-                        if (allTd[i].className !== 'illegalDay') {
+                    if (allTd[i].className !== 'illegalDay') {
+                        if (allTd[i].innerText === this.dateRange[0].getDate().toString()) {
                             allTd[i].className = 'selected-date';
                             firstIndex = i;
                         }
-                    }
-                    if (allTd[i].innerText === this.dateRange[1].getDate().toString()) {
-                        secondIndex = i;
+                        if (allTd[i].innerText === this.dateRange[1].getDate().toString()) {
+                            allTd[i].className = 'selected-date';
+                            secondIndex = i;
+                        }
                     }
                 }
                 // 判断两次点击日期的先后
