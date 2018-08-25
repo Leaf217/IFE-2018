@@ -215,7 +215,7 @@ class Calendar {
 
     // 日期格式检查
     checkInput(inputDate) {
-        return /^\d\d\d\d-\d\d-\d\d$/.test(inputDate);
+        return /^\d{4}-\d{2}-\d{2}$/.test(inputDate);
     }
 
     // 日期范围检查：上下限可都不做输入，也可只输入一个限制
